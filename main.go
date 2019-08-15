@@ -1,14 +1,24 @@
 package main
 
 import (
-	"fmt"
+	"sync"
 )
 
 func main() {
+	// get flags
 	args := ParseFlags()
-	files := GetFiles(args.Dir).Filter(args.In)
+	NewFiles(args).
+		Decode().
+		Encode().
+		Write()
+}
 
-	for _, file := range files {
-		fmt.Println(file.Path)
-	}
+// Await ...
+func Await(files Files) {
+	var wg sync.WaitGroup
+	wg.Add(1)
+	go func() {
+		defer wg.Done()
+	}()
+	wg.Wait()
 }

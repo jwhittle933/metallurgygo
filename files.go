@@ -1,58 +1,73 @@
 package main
 
 import (
+	"fmt"
 	"io/ioutil"
 	"log"
 	"os"
 	"path/filepath"
 )
 
-// InFile ...
-type InFile struct {
-	// Path for passing to jpg.Decode
-	Path string
-	// Ext for checking filetype and skipping
-	// if not --in type
-	Ext  string
-}
+// Files ...
+type Files []*File
 
-// InFiles ...
-type InFiles []InFile
+// NewFiles ...
+func NewFiles(args *Args) Files {
+	files := must(ioutil.ReadDir(args.Dir))
 
-
-// GetFiles ...
-func GetFiles(dir string) InFiles {
-	files := Must(ioutil.ReadDir(dir))
-
-	inFiles := InFiles{}
+	var paths []*File
 	for _, f := range files {
-		path, ext := pathAndExt(dir, f)
-
-		i := InFile{
-			Path: path,
-			Ext:  ext,
+		path, ext := pathAndExt(args.Dir, f)
+		// if file not with --in ext, skip
+		if ext != args.In {
+			continue
 		}
 
-		inFiles = append(inFiles, i)
+		paths = append(paths, &File{
+			Path:    path,
+			FromExt: ext,
+			Name:    f.Name()[:len(f.Name())-len(ext)],
+			ToExt:   args.Out,
+			OutPath: args.Save,
+		})
 	}
 
-	return inFiles
+	return Files(paths)
 }
 
-// Filter ...
-func (i InFiles) Filter(ext string) InFiles {
-	inFiles := InFiles{}
-	for _, f := range i {
-		if f.Ext == ext {
-			inFiles = append(inFiles, f)
+// Decode ...
+func (infs Files) Decode() Files {
+	for _, file := range infs {
+		file.Decode()
+	}
+
+	return infs
+}
+
+// Encode ...
+func (infs Files) Encode() Files {
+	for _, f := range infs {
+		f.Encode()
+	}
+
+	return infs
+}
+
+// Write ...
+func (infs Files) Write() {
+	for _, f := range infs {
+		file, err := os.Create(filepath.Join(f.OutPath, f.Name)+f.ToExt)
+		if err != nil {
+			fmt.Errorf("Write error: %s", err.Error())
 		}
-	}
+		defer file.Close()
 
-	return inFiles
+		_, err = file.Write(f.Buffer.Bytes())
+
+	}
 }
 
-// Must ...
-func Must(files []os.FileInfo, err error) []os.FileInfo {
+func must(files []os.FileInfo, err error) []os.FileInfo {
 	if err != nil {
 		log.Fatal(err)
 		panic(err)
@@ -61,9 +76,8 @@ func Must(files []os.FileInfo, err error) []os.FileInfo {
 	return files
 }
 
-
 func pathAndExt(dir string, file os.FileInfo) (string, string) {
-	path := filepath.Join(dir, file.Name())
+	path := dir+"/"+file.Name()
 	ext := filepath.Ext(path)
 	return path, ext
 }
