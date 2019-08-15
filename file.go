@@ -2,30 +2,23 @@ package main
 
 import (
 	"bytes"
+	"fmt"
 	"image"
 	"image/jpeg"
 	"image/png"
-	"fmt"
 	"os"
 	"path/filepath"
 )
 
 // File ...
 type File struct {
-	// Absolute path location to file
-	Path string
-	// Ext for checking filetype and skipping if not --in type
-	FromExt string
-	// File name
-	Name string
-	// File type to convert to
-	ToExt string
-	// OutPath absolute path for converted image
-	OutPath string
-	// Data for holding decoded image
-	Data image.Image
-	// Buffer for encoded data
-	Buffer *bytes.Buffer
+	Path    string        // Absolute path location to file
+	FromExt string        // Ext for checking filetype and skipping if not --in type
+	Name    string        // File name
+	ToExt   string        // File type to convert to
+	OutPath string        // OutPath absolute path for converted image
+	Data    image.Image   // Data for holding decoded image
+	Buffer  *bytes.Buffer // Buffer for encoded data
 }
 
 // Decode ...
