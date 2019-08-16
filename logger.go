@@ -4,7 +4,7 @@ import (
 	"log"
 	"os"
 
-	"github.com/logrusorgru/aurora"
+	au "github.com/logrusorgru/aurora"
 )
 
 // Log ...
@@ -18,10 +18,10 @@ type Log struct {
 // StartLog ...
 func StartLog() *Log {
 	return &Log{
-		Trace:   log.New(os.Stdout, aurora.Sprintf(aurora.BrightMagenta("[%s] "), "Trace"), log.Ldate|log.Ltime),
-		Info:    log.New(os.Stdout, aurora.Sprintf(aurora.BrightGreen("[%s] "), "Info"), log.Ldate|log.Ltime),
-		Warning: log.New(os.Stdout, aurora.Sprintf(aurora.BrightYellow("[%s] "), "Warning"), log.Ldate|log.Ltime),
-		Error:   log.New(os.Stdout, aurora.Sprintf(aurora.BrightRed("[%s] "), "Error"), log.Ldate|log.Ltime),
+		Trace:   log.New(os.Stdout, au.Sprintf(au.BrightMagenta("[%s] "), "Trace"), log.Ldate|log.Ltime),
+		Info:    log.New(os.Stdout, au.Sprintf(au.BrightGreen("[%s] "), "Info"), log.Ldate|log.Ltime),
+		Warning: log.New(os.Stdout, au.Sprintf(au.BrightYellow("[%s] "), "Warning"), log.Ldate|log.Ltime),
+		Error:   log.New(os.Stdout, au.Sprintf(au.BrightRed("[%s] "), "Error"), log.Ldate|log.Ltime),
 	}
 }
 
