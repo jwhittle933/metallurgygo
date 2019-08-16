@@ -22,3 +22,4 @@ func main() {
 
 	logger.I("Completed in %v", time.Now().Sub(start))
 }
+

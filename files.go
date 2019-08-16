@@ -14,7 +14,7 @@ type Files []*File
 func NewFiles(args *Args) Files {
 	files := must(ioutil.ReadDir(args.Dir))
 
-	var paths []*File
+	var fs []*File
 	for _, f := range files {
 		path, ext := pathAndExt(args.Dir, f)
 		// if file not with --in ext, skip
@@ -26,7 +26,7 @@ func NewFiles(args *Args) Files {
 			logger.I("Found %s", f.Name())
 		}
 
-		paths = append(paths, &File{
+		fs = append(fs, &File{
 			Path:    path,
 			FromExt: ext,
 			Name:    f.Name()[:len(f.Name())-len(ext)],
@@ -36,16 +36,16 @@ func NewFiles(args *Args) Files {
 	}
 
 	// Check for zero results
-	if len(paths) < 1 {
+	if len(fs) < 1 {
 		logger.E("\nSearch returned no results matching extension \"%s\" in %s\n\n", args.In, args.Dir)
 		os.Exit(0)
 	}
 
 	if !verbose {
-		logger.I("Found %v files\n\n", len(paths))
+		logger.I("Found %v files\n\n", len(fs))
 	}
 
-	return Files(paths)
+	return Files(fs)
 }
 
 // Decode ...
@@ -69,31 +69,7 @@ func (infs Files) Encode() Files {
 // Write ...
 func (infs Files) Write() {
 	for _, f := range infs {
-		// In the case of encoding error, Buffer will be empty
-		// Pass to next image if buffer is empty
-		if len(f.Buffer.Bytes()) < 1 {
-			logger.E("Skipping %s due to encoding error\n", f.Name+f.FromExt)
-			continue
-		}
-		file, err := os.Create(filepath.Join(f.OutPath, f.Name)+f.ToExt)
-		if err != nil {
-			logger.E("Write error for %s: %s", f.Name, err.Error())
-			file.Close()
-			continue
-		}
-
-		_, err = file.Write(f.Buffer.Bytes())
-		if err != nil {
-			logger.E("Write error for %s: %s", f.Name, err.Error())
-			file.Close()
-			continue
-		}
-
-		if verbose {
-			logger.I("Wrote %s", f.Name+f.ToExt)
-		}
-
-		file.Close()
+		f.Write()
 	}
 }
 

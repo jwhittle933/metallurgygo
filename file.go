@@ -25,7 +25,7 @@ func (inf *File) Decode() {
 	f, err := os.Open(inf.Path)
 	if err != nil {
 		logger.E("\nError opening %s: %s", inf.Path, err.Error())
-		f.Close()
+		defer Close(f)()
 		return
 	}
 
@@ -33,7 +33,7 @@ func (inf *File) Decode() {
 
 	if err != nil {
 		logger.E("\nError decoding %s: %s", inf.Path, err.Error())
-		f.Close()
+		defer Close(f)()
 		return
 	}
 
@@ -42,7 +42,7 @@ func (inf *File) Decode() {
 	}
 
 	inf.Data = img
-	f.Close()
+	defer Close(f)()
 }
 
 // Encode ...
@@ -61,6 +61,35 @@ func (inf *File) Encode() {
 	}
 
 	inf.Buffer = buf
+}
+
+// Write ...
+func (inf *File) Write() {
+	// In the case of encoding error, Buffer will be empty
+	// Pass to next image if buffer is empty
+	if len(inf.Buffer.Bytes()) < 1 {
+		logger.E("Skipping %s due to encoding error\n", inf.Name+inf.FromExt)
+		return
+	}
+	file, err := os.Create(filepath.Join(inf.OutPath, inf.Name)+inf.ToExt)
+	if err != nil {
+		logger.E("Write error for %s: %s", inf.Name, err.Error())
+		defer Close(file)()
+		return
+	}
+
+	_, err = file.Write(inf.Buffer.Bytes())
+	if err != nil {
+		logger.E("Write error for %s: %s", inf.Name, err.Error())
+		defer Close(file)()
+		return
+	}
+
+	if verbose {
+		logger.I("Wrote %s", inf.Name+inf.ToExt)
+	}
+
+	defer Close(file)()
 }
 
 func (inf *File) decoder(f *os.File) (image.Image, error) {
@@ -89,4 +118,14 @@ func (inf *File) encoder(buf *bytes.Buffer) error {
 	}
 
 	return err
+}
+
+// Close ...
+func Close(f *os.File) func() {
+	return func() {
+		err := f.Close()
+		if err != nil {
+			logger.E("Error closing file: %s", err.Error())
+		}
+	}
 }
