@@ -19,7 +19,7 @@ function install_go() {
     && mv metallurgygo mgo
 }
 
-if [ $USE = "os" || $USE = "OS" ]; then
+if [ $USE ~= "os" ]; then
   install_os
 else
   install_go
