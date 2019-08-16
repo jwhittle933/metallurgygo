@@ -2,7 +2,6 @@ package main
 
 import (
 	"bytes"
-	"fmt"
 	"image"
 	"image/jpeg"
 	"image/png"
@@ -25,9 +24,10 @@ type File struct {
 func (inf *File) Decode() {
 	f, err := os.Open(inf.Path)
 	if err != nil {
-		panic(err)
+		logger.E("\nError opening %s: %s", inf.Path, err.Error())
+		f.Close()
+		return
 	}
-	defer f.Close()
 
 	var img image.Image
 	switch filepath.Ext(inf.Path) {
@@ -38,10 +38,13 @@ func (inf *File) Decode() {
 	}
 
 	if err != nil {
-		panic(err)
+		logger.E("\nError decoding %s: %s", inf.Path, err.Error())
+		f.Close()
+		return
 	}
 
 	inf.Data = img
+	f.Close()
 }
 
 // Encode ...
@@ -58,7 +61,8 @@ func (inf *File) Encode() {
 	}
 
 	if err != nil {
-		fmt.Errorf("Encode error %s", err.Error())
+		logger.E("\nError encoding %s: %s", inf.Path, err.Error())
+		return
 	}
 
 	inf.Buffer = buf

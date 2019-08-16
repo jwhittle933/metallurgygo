@@ -3,7 +3,6 @@ package main
 import (
 	"fmt"
 	"io/ioutil"
-	"log"
 	"os"
 	"path/filepath"
 )
@@ -32,6 +31,12 @@ func NewFiles(args *Args) Files {
 		})
 	}
 
+	// Check for zero results
+	if len(paths) < 1 {
+		logger.E("\nSearch returned no results matching extension \"%s\" in %s\n\n", args.In, args.Dir)
+		os.Exit(0)
+	}
+
 	return Files(paths)
 }
 
@@ -56,21 +61,30 @@ func (infs Files) Encode() Files {
 // Write ...
 func (infs Files) Write() {
 	for _, f := range infs {
+		if len(f.Buffer.Bytes()) < 1 {
+			continue
+		}
 		file, err := os.Create(filepath.Join(f.OutPath, f.Name)+f.ToExt)
 		if err != nil {
-			fmt.Errorf("Write error: %s", err.Error())
+			logger.E("Write error for %s: %s", f.Name, err.Error())
+			file.Close()
+			continue
 		}
-		defer file.Close()
 
 		_, err = file.Write(f.Buffer.Bytes())
-
+		if err != nil {
+			logger.E("Write error for %s: %s", f.Name, err.Error())
+			file.Close()
+			continue
+		}
+		file.Close()
 	}
 }
 
 func must(files []os.FileInfo, err error) []os.FileInfo {
 	if err != nil {
-		log.Fatal(err)
-		panic(err)
+		fmt.Printf("The following error occured: %v", err.Error())
+		os.Exit(1)
 	}
 
 	return files

@@ -2,6 +2,8 @@ package main
 
 import (
 	"flag"
+	"fmt"
+	"os"
 	"path/filepath"
 )
 
@@ -15,12 +17,19 @@ type Args struct {
 
 // ParseFlags ...
 func ParseFlags() *Args {
-	dir := flag.String("dir", ".", "The directory location of your files. DEFAULT: ./")
-	in := flag.String("in", ".png", "The filetype to start with. DEFAULT: .png")
-	out := flag.String("out", ".jpg", "The filetype to convert to. DEFAULT: .jpg")
-	saveLoc := flag.String("save", ".", "The save location for files. DEFAULT: ./")
+	dir := flag.String("dir", ".", "The directory location of your files")
+	in := flag.String("in", ".png", "The filetype to start with")
+	out := flag.String("out", ".jpg", "The filetype to convert to")
+	saveLoc := flag.String("save", ".", "The save location for files")
+	help := flag.Bool("help", false, "Print flags")
 
 	flag.Parse()
+
+	if *help {
+		logger.I("USAGE")
+		flag.PrintDefaults()
+		os.Exit(0)
+	}
 
 	return &Args{
 		Dir:  Absolute(dir),
@@ -34,7 +43,8 @@ func ParseFlags() *Args {
 func Absolute(dir *string) string {
 	path, err := filepath.Abs(*dir)
 	if err != nil {
-		panic(err)
+		fmt.Printf("The following error occured parsing flags: %v", err.Error())
+		os.Exit(1)
 	}
 
 	return path
