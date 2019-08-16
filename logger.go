@@ -7,33 +7,21 @@ import (
 	"github.com/logrusorgru/aurora"
 )
 
-var (
-	trace   *log.Logger
-	info    *log.Logger
-	warning *log.Logger
-	err     *log.Logger
-)
-
 // Log ...
 type Log struct {
-	Trace   *log.Logger
-	Info    *log.Logger
-	Warning *log.Logger
-	Error   *log.Logger
+	Trace,
+	Info,
+	Warning,
+	Error *log.Logger
 }
 
 // StartLog ...
 func StartLog() *Log {
-	trace = log.New(os.Stdout, aurora.Sprintf(aurora.BrightMagenta("[%s] "), "Trace"), log.Ldate|log.Ltime)
-	info = log.New(os.Stdout, aurora.Sprintf(aurora.BrightGreen("[%s] "), "Info"), log.Ldate|log.Ltime)
-	warning = log.New(os.Stdout, aurora.Sprintf(aurora.BrightYellow("[%s] "), "Warning"), log.Ldate|log.Ltime)
-	err = log.New(os.Stdout, aurora.Sprintf(aurora.BrightRed("[%s] "), "Error"), log.Ldate|log.Ltime)
-
 	return &Log{
-		Trace:   trace,
-		Info:    info,
-		Warning: warning,
-		Error:   err,
+		Trace:   log.New(os.Stdout, aurora.Sprintf(aurora.BrightMagenta("[%s] "), "Trace"), log.Ldate|log.Ltime),
+		Info:    log.New(os.Stdout, aurora.Sprintf(aurora.BrightGreen("[%s] "), "Info"), log.Ldate|log.Ltime),
+		Warning: log.New(os.Stdout, aurora.Sprintf(aurora.BrightYellow("[%s] "), "Warning"), log.Ldate|log.Ltime),
+		Error:   log.New(os.Stdout, aurora.Sprintf(aurora.BrightRed("[%s] "), "Error"), log.Ldate|log.Ltime),
 	}
 }
 
