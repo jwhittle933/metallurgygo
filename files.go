@@ -59,8 +59,8 @@ func (infs Files) Decode() Files {
 
 // Encode ...
 func (infs Files) Encode() Files {
-	for _, f := range infs {
-		f.Encode()
+	for _, file := range infs {
+		file.Encode()
 	}
 
 	return infs
@@ -69,7 +69,10 @@ func (infs Files) Encode() Files {
 // Write ...
 func (infs Files) Write() {
 	for _, f := range infs {
+		// In the case of encoding error, Buffer will be empty
+		// Pass to next image if buffer is empty
 		if len(f.Buffer.Bytes()) < 1 {
+			logger.E("Skipping %s due to encoding error\n", f.Name+f.FromExt)
 			continue
 		}
 		file, err := os.Create(filepath.Join(f.OutPath, f.Name)+f.ToExt)

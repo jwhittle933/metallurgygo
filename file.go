@@ -29,13 +29,7 @@ func (inf *File) Decode() {
 		return
 	}
 
-	var img image.Image
-	switch filepath.Ext(inf.Path) {
-	case ".jpg", ".jpeg", ".JPEG":
-		img, err = jpeg.Decode(f)
-	case ".png":
-		img, err = png.Decode(f)
-	}
+	img, err := inf.decoder(f)
 
 	if err != nil {
 		logger.E("\nError decoding %s: %s", inf.Path, err.Error())
@@ -55,14 +49,7 @@ func (inf *File) Decode() {
 func (inf *File) Encode() {
 	var b []byte
 	buf := bytes.NewBuffer(b)
-
-	var err error
-	switch inf.ToExt {
-	case ".jpg", ".jpeg", ".JPEG":
-		err = jpeg.Encode(buf, inf.Data, nil)
-	case ".png":
-		err = png.Encode(buf, inf.Data)
-	}
+	err := inf.encoder(buf)
 
 	if err != nil {
 		logger.E("\nError encoding %s: %s", inf.Path, err.Error())
@@ -74,4 +61,32 @@ func (inf *File) Encode() {
 	}
 
 	inf.Buffer = buf
+}
+
+func (inf *File) decoder(f *os.File) (image.Image, error) {
+	var img image.Image
+	var err error
+	switch filepath.Ext(inf.Path) {
+	case ".jpg", ".jpeg", ".JPEG":
+		img, err = jpeg.Decode(f)
+	case ".png":
+		img, err = png.Decode(f)
+	}
+
+	return img, err
+}
+
+func (inf *File) encoder(buf *bytes.Buffer) error {
+	var err error
+	switch inf.ToExt {
+	case ".jpg", ".jpeg", ".JPEG":
+		// TODO: extend cli to include image quality
+		err = jpeg.Encode(buf, inf.Data, &jpeg.Options{
+			Quality: 50,
+		})
+	case ".png":
+		err = png.Encode(buf, inf.Data)
+	}
+
+	return err
 }

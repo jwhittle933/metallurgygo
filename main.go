@@ -15,10 +15,10 @@ func init() {
 func main() {
 	args := ParseFlags()
 
-	NewFiles(args).
-		Decode().
-		Encode().
-		Write()
+	// Single chain of operations
+	// Error checking is done at every step
+	// If error, log error and os.Exit
+	NewFiles(args).Decode().Encode().Write()
 
 	logger.I("Completed in %v", time.Now().Sub(start))
 }
