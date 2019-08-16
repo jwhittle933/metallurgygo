@@ -33,7 +33,7 @@ go get github.com/jwhittle933/metallurgygo
 
 Install:
 ```bash
-cd $GOPATH/src/github.com/metallurgygo && go install $GOPATH/src/github.com/metallurgygo
+cd $GOPATH/src/github.com/metallurgygo && go install
 ```
 
 (Optionally) change the binary name for easy use:
@@ -45,7 +45,7 @@ mv $GOPATH/bin/metallurgygo $GOPATH/bin/mgo
 ```bash
 mgo --dir <path/to/files> --in <input format> --out <output format> --save <path/to/save/location>
 ```
-Each flag has its own defaults:
+Each flag has its own defaults which can be seen with the `--help` flag:
 ```bash
 $ mgo --help
 [Info] 2019/08/15 21:49:04 logger.go:47: USAGE
