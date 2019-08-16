@@ -4,7 +4,7 @@ A Golang command-line application for bulk converting images. The app finds all 
 ---
 
 ### Install Options
-The following presents two methods of installation: the first to the OS (Mac/Linux), the second using Go topls
+The following presents two methods of installation: the first to OS (Mac/Linux), the second using Go tools
 
 ---
 
@@ -54,7 +54,7 @@ mv $GOPATH/bin/metallurgygo $GOPATH/bin/mgo
 mgo --dir <path/to/files> --in <input format> --out <output format> --save <path/to/save/location>
 ```
 Each flag has its own defaults which can be seen with the `--help` flag:
-```bash
+```
 $ mgo --help
 [Info] 2019/08/15 21:49:04 logger.go:47: USAGE
   -dir string
@@ -67,4 +67,6 @@ $ mgo --help
     	The filetype to convert to (default ".jpg")
   -save string
     	The save location for files (default ".")
+  -v
+        This option turns on verbose logging
 ```
