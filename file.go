@@ -43,6 +43,10 @@ func (inf *File) Decode() {
 		return
 	}
 
+	if verbose {
+		logger.I("Decoding %s", inf.Name+inf.FromExt)
+	}
+
 	inf.Data = img
 	f.Close()
 }
@@ -63,6 +67,10 @@ func (inf *File) Encode() {
 	if err != nil {
 		logger.E("\nError encoding %s: %s", inf.Path, err.Error())
 		return
+	}
+
+	if verbose {
+		logger.I("Encoding %s", inf.Name+inf.ToExt)
 	}
 
 	inf.Buffer = buf

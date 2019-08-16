@@ -22,6 +22,10 @@ func NewFiles(args *Args) Files {
 			continue
 		}
 
+		if verbose {
+			logger.I("Found %s", f.Name())
+		}
+
 		paths = append(paths, &File{
 			Path:    path,
 			FromExt: ext,
@@ -35,6 +39,10 @@ func NewFiles(args *Args) Files {
 	if len(paths) < 1 {
 		logger.E("\nSearch returned no results matching extension \"%s\" in %s\n\n", args.In, args.Dir)
 		os.Exit(0)
+	}
+
+	if !verbose {
+		logger.I("Found %v files\n\n", len(paths))
 	}
 
 	return Files(paths)
@@ -77,6 +85,11 @@ func (infs Files) Write() {
 			file.Close()
 			continue
 		}
+
+		if verbose {
+			logger.I("Wrote %s", f.Name+f.ToExt)
+		}
+
 		file.Close()
 	}
 }

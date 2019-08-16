@@ -24,10 +24,10 @@ type Log struct {
 
 // StartLog ...
 func StartLog() *Log {
-	trace = log.New(os.Stdout, aurora.Sprintf(aurora.BrightMagenta("[%s] "), "Trace"), log.Ldate|log.Ltime|log.Lshortfile)
-	info = log.New(os.Stdout, aurora.Sprintf(aurora.BrightGreen("[%s] "), "Info"), log.Ldate|log.Ltime|log.Lshortfile)
-	warning = log.New(os.Stdout, aurora.Sprintf(aurora.BrightYellow("[%s] "), "Warning"), log.Ldate|log.Ltime|log.Lshortfile)
-	err = log.New(os.Stdout, aurora.Sprintf(aurora.BrightRed("[%s] "), "Error"), log.Ldate|log.Ltime|log.Lshortfile)
+	trace = log.New(os.Stdout, aurora.Sprintf(aurora.BrightMagenta("[%s] "), "Trace"), log.Ldate|log.Ltime)
+	info = log.New(os.Stdout, aurora.Sprintf(aurora.BrightGreen("[%s] "), "Info"), log.Ldate|log.Ltime)
+	warning = log.New(os.Stdout, aurora.Sprintf(aurora.BrightYellow("[%s] "), "Warning"), log.Ldate|log.Ltime)
+	err = log.New(os.Stdout, aurora.Sprintf(aurora.BrightRed("[%s] "), "Error"), log.Ldate|log.Ltime)
 
 	return &Log{
 		Trace:   trace,

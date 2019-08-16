@@ -1,8 +1,12 @@
 ## Metallurgy Go
 A Golang command-line application for bulk converting images. The app finds all files with the extension given to `--in` flag and converts them to format given to `--out` flag. __NOTE__: This app is single-threaded, so the larger the file set given, the longer it will take. It will be fast, but not as fast as possible. Concurrent execution will be implemented in a future release.
 
+---
+
 ### Install Options
 The following presents two methods of installation: the first to the OS (Mac/Linux), the second using Go topls
+
+---
 
 #### OS
 Clone the repo:
@@ -25,6 +29,8 @@ mv mgo /usr/local/bin/
 rm -rf ./metallurgygo
 ```
 
+---
+
 #### Golang
 Get the repo:
 ```bash
@@ -40,6 +46,8 @@ cd $GOPATH/src/github.com/metallurgygo && go install
 ```bash
 mv $GOPATH/bin/metallurgygo $GOPATH/bin/mgo
 ```
+
+---
 
 ### Usage
 ```bash

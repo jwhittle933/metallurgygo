@@ -7,6 +7,8 @@ import (
 	"path/filepath"
 )
 
+var verbose = false
+
 // Args struct
 type Args struct {
 	Dir  string
@@ -22,6 +24,7 @@ func ParseFlags() *Args {
 	out := flag.String("out", ".jpg", "The filetype to convert to")
 	saveLoc := flag.String("save", ".", "The save location for files")
 	help := flag.Bool("help", false, "Print flags")
+	verboseLogs := flag.Bool("v", false, "This option turns on verbose logging")
 
 	flag.Parse()
 
@@ -31,6 +34,7 @@ func ParseFlags() *Args {
 		os.Exit(0)
 	}
 
+	verbose = *verboseLogs
 	return &Args{
 		Dir:  Absolute(dir),
 		In:   *in,
