@@ -25,22 +25,22 @@ func StartLog() *Log {
 	}
 }
 
-// T Trace method
+// T Trace method shorthand
 func (l *Log) T(f string, m ...interface{}) {
 	l.Trace.Printf(f, m...)
 }
 
-// I Info method
+// I Info method shorthand
 func (l *Log) I(f string, m ...interface{}) {
 	l.Info.Printf(f, m...)
 }
 
-// W Warning method
+// W Warning method shorthand
 func (l *Log) W(f string, m ...interface{}) {
 	l.Warning.Printf(f, m...)
 }
 
-// E Error method
+// E Error method shorthand
 func (l *Log) E(f string, m ...interface{}) {
 	l.Error.Printf(f, m...)
 }
